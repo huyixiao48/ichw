@@ -1,13 +1,10 @@
-"""第一个版本是直接复制下来的,这个是代码复制粘贴下来的,不知道需要哪一个.
-总之整个程序挺难看的(捂脸),而且非常物理不正确.
-不过貌似示例里还出现了轨道交叉???虽然这样比较好看但是这是我最后的坚守了(才怪)
-至少是画出了椭圆并且可以同时运动,就这样吧.
-"""
 """planets.py: A homework to roughly modify the movements of the planets.
 
 __author__ = "胡奕潇"
 __pkuid__  = "1700011716"
 __email__  = "1700011716@pku.edu.cn"
+
+I DON'T KNOW WHICH TYPES OF THE FILE IS REQUIRED, SO THERE IS TWO KIND OF ANSWERS.
 """
 
 import math
@@ -20,17 +17,11 @@ def start(name,q):
     name.down()
     name.shape("circle")
 
-def move(name,e,p,sp):
-    ang=an*(math.pi/180)
-    t=e*p/(1-e*math.cos(ang*sp))
-    x=t*math.cos(ang*sp)
-    y=t*math.sin(ang*sp)
-    name.goto(x,y)
-
     
 def main():
     turtle.color("red")
     turtle.shape("circle")
+    turtle.shapesize(2)
     turtle.up()
     
     sc=turtle.Screen()
@@ -75,4 +66,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-    
+   
