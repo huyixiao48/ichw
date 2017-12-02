@@ -8,8 +8,7 @@ __email__  = "1700011716@pku.edu.cn"
 """
 
 
-"""Part A Currency Query.
-get all the datas needed from the given URL"""
+"""Part A Currency Query."""
 
 
 def analysis(currency_from, currency_to, amount_from):
@@ -22,7 +21,8 @@ def analysis(currency_from, currency_to, amount_from):
     Precondition: currency_to is a string.
     
     Parameter amount_from: amount of currency to convert
-    Precondition: amount_from is a float."""
+    Precondition: amount_from is a string but can be some 
+    other things like a float."""
     str_amount_from = str(amount_from)
     web = "http://cs1110.cs.cornell.edu/2016fa/a1server.php?from=" + \
     currency_from + "&to=" + currency_to + "&amt=" + str_amount_from
@@ -87,7 +87,7 @@ def oput(js):
 def main():   
     cfrom = input("the currency on hand")
     cto = input("the currency convert to")
-    afrom = float(input("amount of currency to convert"))
+    afrom = input("amount of currency to convert"))
     fij = analysis(cfrom, cto, afrom)
     print(valid(fij))
     
