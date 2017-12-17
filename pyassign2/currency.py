@@ -1,197 +1,148 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": 4,
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Source currency code is invalid.\n",
-      "All tests passed\n"
-     ]
-    }
-   ],
-   "source": [
-    "\"\"\"Module for currency exchange\n",
-    "\n",
-    "This module provides several string parsing functions to implement a \n",
-    "simple currency exchange routine using an online currency service. \n",
-    "The primary function in this module is exchange.\n",
-    "\n",
-    "__author__ = \"胡奕潇\"\n",
-    "__pkuid__  = \"1700011716\"\n",
-    "__email__  = \"1700011716@pku.edu.cn\"\n",
-    "\"\"\"\n",
-    "\n",
-    "\n",
-    "\"\"\"Part A Currency Query.\n",
-    "get all the datas needed from the given URL\"\"\"\n",
-    "\n",
-    "\n",
-    "def analysis(currency_from, currency_to, amount_from):\n",
-    "    \"\"\"Return: a JSON string contains all the information we need.\n",
-    "    \n",
-    "    Parameter currency_from: the currency on hand.\n",
-    "    Precondition: currency_from is a string.\n",
-    "    \n",
-    "    Parameter currency_to: the currency to convert to.\n",
-    "    Precondition: currency_to is a string.\n",
-    "    \n",
-    "    Parameter amount_from: amount of currency to convert\n",
-    "    Precondition: amount_from is a float.\"\"\"\n",
-    "    str_amount_from = str(amount_from)\n",
-    "    web = \"http://cs1110.cs.cornell.edu/2016fa/a1server.php?from=\" + \\\n",
-    "    currency_from + \"&to=\" + currency_to + \"&amt=\" + str_amount_from\n",
-    "    from urllib.request import urlopen\n",
-    "    doc = urlopen(web)\n",
-    "    docstr = doc.read()\n",
-    "    doc.close()\n",
-    "    jstr = docstr.decode('ascii')\n",
-    "    return(jstr)\n",
-    "\n",
-    "\n",
-    "\"\"\"Part B Processing a JSON String\"\"\"\n",
-    "\n",
-    "\n",
-    "def valid(js):\n",
-    "    \"\"\"judge whether the datas input is valid.\n",
-    "    Parameter js: \n",
-    "    in the form'{\"from\":\"*\",\"to\":\"*\",\"success\": *, \"error\":\"*\"}'\n",
-    "    \"\"\"\n",
-    "    if \"invalid\" not in js:\n",
-    "        return(cal(js))\n",
-    "    else:\n",
-    "        return(oput(js))\n",
-    "    \n",
-    "    \n",
-    "def cal(js):\n",
-    "    \"\"\"Return: amount of currency received in the given exchange.\n",
-    "    The value returned has type float.\n",
-    "    \n",
-    "    Parameter js: \n",
-    "    in the form\n",
-    "    '{\"from\":\"<old-amt>\",\"to\":\"<new-amt>\",\"success\": true, \"error\":\"\"}'\n",
-    "    \"\"\"\n",
-    "    L = len(js)\n",
-    "    J = js[:(L-34)]+\" }\"\n",
-    "    j = eval(J)\n",
-    "    jfinal = j[\"to\"]\n",
-    "    K = jfinal.split()\n",
-    "    k = float(K[0])\n",
-    "    return(k)\n",
-    "\n",
-    "\n",
-    "def oput(js):\n",
-    "    \"\"\"Return: problem reports.\n",
-    "    \n",
-    "    Paramter js:\n",
-    "    in the form\n",
-    "    '{\"from\":\"\",\"to\":\"\",\"success\":false,\"error\":\"* is invalid.\"}'\"\"\"\n",
-    "    if \"Source currency code is invalid.\" in js:\n",
-    "        return(\"Source currency code is invalid.\")\n",
-    "    elif \"Currency amount is invalid.\" in js:\n",
-    "        return(\"Currency amount is invalid.\")\n",
-    "    elif \"Exchange currency code is invalid.\" in js:\n",
-    "        return(\"Exchange currency code is invalid.\")\n",
-    "    else:\n",
-    "        return(\"unknow problems\")\n",
-    "\n",
-    "    \n",
-    "\"\"\"Part C Currency Exchange\"\"\"\n",
-    "\n",
-    "\n",
-    "def main():   \n",
-    "    cfrom = input(\"the currency on hand\")\n",
-    "    cto = input(\"the currency convert to\")\n",
-    "    afrom = float(input(\"amount of currency to convert\"))\n",
-    "    fij = analysis(cfrom, cto, afrom)\n",
-    "    print(valid(fij))\n",
-    "    \n",
-    "\n",
-    "if __name__ == '__main__':\n",
-    "    main()\n",
-    "\n",
-    "    \n",
-    "\"\"\"Part D Test\"\"\"\n",
-    "\n",
-    "def exchange(currency_from, currency_to, amount_from):\n",
-    "    \"\"\"As is required by the problem given by the teacher.\n",
-    "    Also provide a way to test the functions.\n",
-    "    \n",
-    "    Returns: amount of currency received in the given exchange.\n",
-    "    \n",
-    "    The value returned has type float. \n",
-    "\n",
-    "    Parameter currency_from: the currency on hand\n",
-    "    Precondition: currency_from is a string for a valid currency code\n",
-    "\n",
-    "    Parameter currency_to: the currency to convert to\n",
-    "    Precondition: currency_to is a string for a valid currency code\n",
-    "\n",
-    "    Parameter amount_from: amount of currency to convert\n",
-    "    Precondition: amount_from is a float\"\"\"\n",
-    "    x = analysis(currency_from, currency_to, amount_from)\n",
-    "    return(cal(x))\n",
-    "\n",
-    "\n",
-    "def invalidproblem(currency_from, currency_to, amount_from):\n",
-    "    \"\"\"Provide a way to test the functions.\n",
-    "    Returns: problem reports.\"\"\"\n",
-    "    x = analysis(currency_from, currency_to, amount_from)\n",
-    "    return(oput(x))\n",
-    "\n",
-    "\n",
-    "def test_exchange1():\n",
-    "    assert(2.0952375 == exchange(\"USD\",\"EUR\", 2.5))\n",
-    "\n",
-    "    \n",
-    "def test_exchange2():\n",
-    "    assert(1 == exchange(\"CNY\",\"CNY\", 1))\n",
-    "\n",
-    "    \n",
-    "def test_invalidproblem():\n",
-    "    assert(\"Currency amount is invalid.\" == \\\n",
-    "           invalidproblem(\"USD\",\"CNY\",\"PIG\"))\n",
-    "    \n",
-    "    \n",
-    "def test_all():\n",
-    "    \"\"\"test all cases\"\"\"\n",
-    "    test_exchange1()\n",
-    "    test_exchange2()\n",
-    "    test_invalidproblem()\n",
-    "    print(\"All tests passed\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.6.2"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 2
-}
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""This module provides several string parsing functions to implement a 
+simple currency exchange routine using an online currency service. 
+The primary function in this module is exchange.
+
+__author__ = "胡奕潇"
+__pkuid__  = "1700011716"
+__email__  = "1700011716@pku.edu.cn"
+"""
+
+
+"""Part A Currency Query."""
+
+
+def analysis(currency_from, currency_to, amount_from):
+    """Return: a JSON string contains all the information we need.
+    
+    Parameter currency_from: the currency on hand.
+    Precondition: currency_from is a string.
+    
+    Parameter currency_to: the currency to convert to.
+    Precondition: currency_to is a string.
+    
+    Parameter amount_from: amount of currency to convert
+    Precondition: amount_from is a string but can be some 
+    other things like a float."""
+    str_amount_from = str(amount_from)
+    web = "http://cs1110.cs.cornell.edu/2016fa/a1server.php?from=" + \
+    currency_from + "&to=" + currency_to + "&amt=" + str_amount_from
+    from urllib.request import urlopen
+    doc = urlopen(web)
+    docstr = doc.read()
+    doc.close()
+    jstr = docstr.decode('ascii')
+    return(jstr)
+
+
+"""Part B Processing a JSON String"""
+
+
+def valid(js):
+    """judge whether the datas input is valid.
+    Parameter js: 
+    in the form'{"from":"*","to":"*","success": *, "error":"*"}'
+    """
+    if "invalid" not in js:
+        return(cal(js))
+    else:
+        return(oput(js))
+    
+    
+def cal(js):
+    """Return: amount of currency received in the given exchange.
+    The value returned has type float.
+    
+    Parameter js: 
+    in the form
+    '{"from":"<old-amt>","to":"<new-amt>","success": true, "error":""}'
+    """
+    L = len(js)
+    J = js[:(L-34)]+" }"
+    j = eval(J)
+    jfinal = j["to"]
+    K = jfinal.split()
+    k = float(K[0])
+    return(k)
+
+
+def oput(js):
+    """Return: problem reports.
+    
+    Paramter js:
+    in the form
+    '{"from":"","to":"","success":false,"error":"* is invalid."}'"""
+    if "Source currency code is invalid." in js:
+        return("Source currency code is invalid.")
+    elif "Currency amount is invalid." in js:
+        return("Currency amount is invalid.")
+    elif "Exchange currency code is invalid." in js:
+        return("Exchange currency code is invalid.")
+    else:
+        return("unknow problems")
+
+    
+"""Part C Currency Exchange"""
+
+
+def main():   
+    cfrom = input("the currency on hand")
+    cto = input("the currency convert to")
+    afrom = input("amount of currency to convert"))
+    fij = analysis(cfrom, cto, afrom)
+    print(valid(fij))
+    
+
+if __name__ == '__main__':
+    main()
+
+    
+"""Part D Test"""
+
+def exchange(currency_from, currency_to, amount_from):
+    """As is required by the problem given by the teacher.
+    Also provide a way to test the functions.
+    
+    Returns: amount of currency received in the given exchange.
+    
+    The value returned has type float. 
+
+    Parameter currency_from: the currency on hand
+    Precondition: currency_from is a string for a valid currency code
+
+    Parameter currency_to: the currency to convert to
+    Precondition: currency_to is a string for a valid currency code
+
+    Parameter amount_from: amount of currency to convert
+    Precondition: amount_from is a float"""
+    x = analysis(currency_from, currency_to, amount_from)
+    return(cal(x))
+
+
+def invalidproblem(currency_from, currency_to, amount_from):
+    """Provide a way to test the functions.
+    Returns: problem reports."""
+    x = analysis(currency_from, currency_to, amount_from)
+    return(oput(x))
+
+
+def test_exchange1():
+    assert(2.0952375 == exchange("USD","EUR", 2.5))
+
+    
+def test_exchange2():
+    assert(1 == exchange("CNY","CNY", 1))
+
+    
+def test_invalidproblem():
+    assert("Currency amount is invalid." == \
+           invalidproblem("USD","CNY","PIG"))
+    
+    
+def test_all():
+    """test all cases"""
+    test_exchange1()
+    test_exchange2()
+    test_invalidproblem()
+    print("All tests passed")
